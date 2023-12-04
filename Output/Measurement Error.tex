@@ -1,0 +1,582 @@
+\documentclass[12pt]{article}
+\usepackage[round]{natbib}
+
+\usepackage{amssymb,amsmath,amsfonts,eurosym,geometry,ulem,graphicx,caption,color,setspace,sectsty,comment,footmisc,caption,pdflscape,subfigure,array,hyperref}
+
+\normalem
+\usepackage{float}
+\onehalfspacing
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{proposition}{Proposition}
+\newenvironment{proof}[1][Proof]{\noindent\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
+
+\newtheorem{hyp}{Hypothesis}
+\newtheorem{subhyp}{Hypothesis}[hyp]
+\renewcommand{\thesubhyp}{\thehyp\alph{subhyp}}
+
+\newcommand{\red}[1]{{\color{red} #1}}
+\newcommand{\blue}[1]{{\color{blue} #1}}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\arraybackslash\hspace{0pt}}m{#1}}
+
+\usepackage[numbib]{tocbibind}
+\renewcommand\bibname{References}
+
+\usepackage{booktabs}
+
+\usepackage{tabularray}
+\usepackage{multirow}
+\NewTblrTheme{table_JY}{
+	\SetTblrStyle{caption-tag}{font=\bfseries\small}
+	\SetTblrStyle{caption-text}{font=\bfseries\small}
+	
+	%	\SetTblrTemplate{head,foot}{empty}
+	%\SetTblrStyle{caption-sep}{default}{.\enskip}
+}
+\usepackage[raggedrightboxes]{ragged2e}
+\usepackage{xltabular}
+\usepackage{xcolor}
+\hypersetup{
+	colorlinks,
+	linkcolor={red!50!black},
+	citecolor={blue!50!black},
+	urlcolor={blue!80!blue}
+}
+
+\geometry{left=1.0in,right=1.0in,top=1.0in,bottom=1.0in}
+
+\begin{document}
+% meetings: 
+%	https://iaes.cgiar.org/sites/default/files/pdf/1-s2.0-s2211912418301056-main.pdf
+% https://iaes.cgiar.org/spia/publications/dna-fingerprinting-crop-varietal-identification-fit-purpose-protocols-their-costs
+% https://journals.sagepub.com/doi/10.1177/00307270221124008
+%https://iaes.cgiar.org/sites/default/files/pdf/1-s2.0-s2211912418301056-main.pdf
+
+	\begin{titlepage}
+%		\title{Nonelinear models with non-classic measurement error in gender analysis}
+		\title{Estimating the gender differences in technology adoption in the presence of nonclassical measurement error}
+		\author{Author1\thanks{abc} \and Author2\thanks{abc} \and Author3\thanks{abc}}
+%		\date{\today}
+		\maketitle
+		\begin{abstract}
+			\noindent An evolving literature shows the gender differences in technology adoption. By using a unique Cassava dataset, we demonstrate that there are non-classic measurement errors in self-reported agricultural data, which is endogenous to gender. We analytically discuss the bias in gender analysis with nonlinear models due to the non-classic measurement error. Next, with Monte Carlo simulations, we illustrate the bias in regressions results by using self-reported agricultural data in analysis. Corrections to the endogenous measurement error is also discussed.
+			misreporting adoption status\\
+			by comparing the differences between the husband and wife from the same household, we investigate how the measurement error bias the regression analysis of gender differences on technology adoption. \\
+			
+			our results show that misreporting of adoption status and other variables are not exogenous to gender. the resutls of this article 
+			
+			\vspace{0in}\\
+			\noindent\textbf{Keywords:} Endogeneity, Measurement error, Gender differences, Technology adoption\\
+			\vspace{0in}\\
+			\noindent\textbf{JEL Codes:} C51, C81, C83, O12, O33.\\
+			
+			\bigskip
+		\end{abstract}
+		\setcounter{page}{0}
+		\thispagestyle{empty}
+	\end{titlepage}
+	\pagebreak \newpage
+	
+	
+	
+	
+	\doublespacing
+	
+	
+	\section{Introduction} \label{sec:introduction}
+	
+		The significance of incorporating a gender perspective in various social and economic sectors has been emphasized by policymakers and development professionals since the 1990s. The World Bank, FAO, and IFAD's series of publications (e.g. \cite{quisumbing2014gender, fortmann2009gender}) highlighted that neglecting to acknowledge the varying roles, disparities, and inequalities between men and women in the agricultural sector poses a significant risk to the success of agricultural development efforts
+
+	  Several studies have revealed gender gaps in the adoption of new technologies, as well as non-classical measurement errors in agricultural survey data. On the other hand, recent studies showed that self-reported data is possibly misclassified \citep{wossen2019estimating}. According to \citep{meyer2009under}, survey data on participation in social programs is subject to significant misreporting, with levels of misreporting that can reach as high as 50\%.\cite{wossen2019estimating} indicated that the misreporting of adoption status is not exogenous to the household's characteristics. Furthermore, this misreporting leads to a substantial bias of approximately 22 percentage points in the productivity impact of adoption.
+	  
+	Although prior research has explored gender gaps in technology adoption, no studies have assessed the influence of non-classical measurement errors on such analyses. Thus, our study aims to fill this gap by examining the potential impact of non-classical errors in agricultural survey data on the estimation of gender gaps in technology adoption. More specifically, this study explicitly demonstrate the measurement errors and apply a household survey data to demonstrate the non-classic error. \textbf{This is the first study that using responses reported by both genders in each household to identify the non-classic measurement error related to gender.  }
+	
+	
+\cite{nguimkeu2019estimation}: "Much less is known about the case in which the regressor and the measurement error are both endogenous."
+	
+	"One-sided misreporting (i.e., the occurrence of only one of the two types of misclassification errors)
+	is pervasive in practice and many empirical studies. For example, Lynch et al. (2007) and Meyer et al. (2018) report that
+	validation studies always find high rates of false negatives in the Supplemental Nutrition Assistance Program (SNAP) ranging
+	from 20\% to 50\%, depending on the survey and period.2 While Meyer et al. (2018) finds up to 50\% rate of false negatives in
+	SNAP participation in the CPS Annual Social and Economic Supplement, false positives are typically low with only less than
+	1.5\% of non-recipients reporting SNAP receipt.
+	One-sided misreporting is not confined to government"
+	   
+	   
+	   
+		previous studies discussed 
+	\begin{itemize}
+
+		\item gender differences in technology adoption (\cite{awotide2014assessing,apu2011effect}) \\
+		after reviewing 35 case studies, \cite{ragasa2012gender} found that women have "much slower observed rates of adoption of a wide range of technologies than men. "While women are becoming more involved through\textbf{ participatory research approaches and participatory rural analyses, relatively little attention has been}	given to gender issues in the upstream priority-setting and decisionmaking" --\textcolor{red}{\how many women surveyed, representation? } \textcolor{blue}{could not find a summary table from this study}
+		
+		\cite{peterman2014review}: microeconomic empirical studies on gender differences in use, access, and adoption of non-land agricultural inputs in developing countries.
+		\item the measurement errors/misreporting in agricultural data and their implications when the dependent variables are continuous.  
+	\end{itemize}
+	This study: 
+	\begin{enumerate}
+		\item demonstrates there is a non-classic measurement error associated with gender. 
+		\item analytically/theoretically shows the bias in regression analysis of gender differences in technology adoption with the existence of the non-classic measurement error.
+		\item using Monte Carlo simulation to illustrate the bias in regression analysis.
+		\item discusses identifications and remedies in future studies.
+	\end{enumerate}
+
+	By filling in the gap, this study is the first one that analytically demonstrate the bias of gender gap in technology adoption by illustrating the non-classic measurement error is endogenous to gender. We also use Monte Carlo simulations to illustrate the impact of the non-classic measurement error on regression results. 
+	 
+\textbf{	 reasons behind the different responses:}
+	\cite{teeken2021beyond} found that women focus on production traits while men prioritize agronomic traits. 
+
+
+	\section{Literature Review} \label{sec:literature}
+	\subsection{Measurement error}
+	studies discussing measurement errors of production analysis (dependent variable: continuous), but not adoption analysis (dependent variable: binary). 
+	\cite{abay2022inferential}
+	AJAE:
+	 \cite{abay2021measurement}
+	 
+	 \subsection{Gender differences in technology adoption}
+	 
+	 \cite{peterman2014review}
+	 
+	 
+	 Social economic factors affect farmers' adoption decisions, but the self-reported survey data may be mis-represented by female and male, which caused the overestimation of the gender gap. 
+	 
+	 Studies have consistently found that hired labor, owned farmland, age (adoption would increase to certain level then start to decrease), and access to credit were all significant determinants of ICV adoption (\cite{awotide2014assessing}). Additional significant factors positively associated with adoption included education status, adaptability, and compatibility; however, complexity of technology was a barrier to adoption (F.N Nwakor et al. 2011). Off-farm income has a negative and significant decision to adopt ICV (Awotide et al. 2014), as did marital status, household size, farm size, and land ownership (Udensi et al. 2011). Those with access to processing machines, grating machines in particular, as well as membership in community or cooperative organizations were more likely to use improved varieties (Abdoulaye et al. 2014).
+	 
+	 
+	 A number of factors affect the adoption of improved cassava processing technologies, including access to information, credit, education, raw materials, and cost (\cite{ehinmowo2016adoption}).
+ 
+Males are more likely to adopt than females by 13.83 percent \cite{obisesan2014gender}
+
+
+"In Nigeria, cassava trait preferences relate not only to gender, but also to one’s role in the value chain (\cite{teeken2018cassava}), which is also shaped by gender, as well to the processed foods gari, eba, and fufu that are produced from it (\cite{teeken2021understanding})."
+
+"In addition, two did not report sex-disaggregation of their sample (Apu and Nwachukwu 2011; Awotide et al. 2014). Three of these studies were vast majority male respondents (Agwu, Ekwueme, and Anyanwu 2008; Abdoulaye et al. 2014), including a study focused on analyzing gender differences (Obisesan 2014). Two studies were split more evenly between male- and female- respondents (Nwakor et al. 2011; Udensi et al. 2011). Abdoulaye et al. (2014) found that gender was not a significant determinant in the adoption of improved cassava varieties. Udensi et al. (2011) also found that gender was not significantly correlated, but it was negative suggesting that women have a higher adoption rate than men do. In another study in the same state (Abia), gender was a positive and significant factor of adoption, with more women farmers adopting ICV than men (Nwakor et al. 2011). This was consistent with Awotide et al. (2014) who found that female-headed household adoption of ICVs was higher than male-headed households. However, Wossen et al. (2017) found that heads of households, which they interpret as men, were more likely to adopt ICV than spouses (or women); however, there was no significant differences between men and women when adoption was measured through DNA fingerprinting. The lack of evidence regarding gender behaviors among these crops has important implications for technology development, as preferences remain unknown and cannot be accounted for (Thiele et al. 2020). Consistent with previous explorations of the role of gender in technology adoption, the gender gap in improved cassava variety adoption in Nigeria varies. As a result, there is both a call for a greater policy focus on men due to women’s higher rates of adoptions (Nwakor et al. 2011) as well as an increased focus on women (Obisesan 2014).  "
+
+controversial conclusions of the gender gap in technology adoption. The inconsistency may caused by the gender mix in the survey data:
+
+		\fontsize{8}{11}\selectfont
+		\renewcommand{\arraystretch}{0.8}
+		\begin{longtblr}[theme=table_JY,
+		caption = {Sampling and sex-disaggregation of previous studies of improved cassava-related technology adoption in Nigeria (non-systematic review)}, 
+		label = {table:lit}] {colspec ={ X[1,l] X[1,l] X[1,1] X[1,1] X[2,1]},rowhead=3}
+		\hline
+		Author                                               & Sample Size                              & Sample frame                               & Sex Disaggregation             & Gender-Related Results                                                                                                      \\ 	\hline
+		\citet{awotide2014assessing}               & 841 households          & “Community and household” & not specified                                                                                  & FHHs more likely to adopt                                                                                  \\
+		\citet{apu2011effect}          & 150 respondents         & “Farm families”           & not specified                                                                                  & not specified                                                                                              \\
+		\citet{abdoulaye2014awareness}           & 952 respondents         & Household heads           & \begin{tabular}[c]{@{}l@{}}89\% male \\      11\% female\\      89\% married\end{tabular}      & Gender not significant                                                                                     \\
+		\citet{agwu2008adoption} & 135 farmers             & not specified             & \begin{tabular}[c]{@{}l@{}}81.5\% male\\      18.5\% female\\      73.3\% married\end{tabular} & not specified                                                                                              \\
+		\citet{nwakor2011socio}              & 150 farmers             & Registered farmers        & \begin{tabular}[c]{@{}l@{}}45.3\% male\\      54.7\% female\\      70.7\% married\end{tabular} & Women more likely to adopt                                                                                 \\
+		\citet{obisesan2014gender}                   & 482 “completed surveys” & Households                & \begin{tabular}[c]{@{}l@{}}76.23\% male\\      23.8\% female\end{tabular}                      & Men more likely to adopt                                                                                   \\
+		\citet{udensi2011adoption}                 & 510 farmers             & Community list of farmers & \begin{tabular}[c]{@{}l@{}}43.5\% male\\      56.5\% female\\      78.8\% married\end{tabular} & Gender not significant in ICV adoption                                                                     \\
+		\citet{assfaw2017cassava}                  & 2500 households         & Household heads           & not specified                                                                                  & Men more likely to adopt ICV; Gender not significant when ICV adoption   is measured by DNA fingerprinting                                                                                                                       
+		\\ \hline
+		
+		\end{longtblr} 
+	Add: \citet{peterman2014review}:
+	 Table 1. Gender differences in access to technological inputs: Fertilizer, insecticide, seed varieties, and other technological inputs 
+	
+	Table 2. Gender differences in access to natural resources: Water and soil fertilityCountrySample
+	
+
+	\section{Data} \label{sec:data}
+	
+%	Drew from the word document directly:
+	"Cassava (Manihot esculenta), a major staple crop, is the main source of calories for 500 million people across the globe. It can be grown with minimally purchased inputs due to its tolerance to environmental stresses, in particular drought (EL-Sharkawy, 2003). This minimal care, along with being an energy-dense food, make cassava central to food security and resilience strategies (Montagnac, Davis, and Tanumihardjo 2009). The majority of the countries with the highest daily rates of per capita cassava consumption are in Africa, with Nigeria being the world’s largest producer (FAOSTAT n.d.). In Nigeria, cassava is predominantly cultivated by men and women small holders (1-5 hectares) (Joyce Ahmadu and P. O. Idisi 2014). It is also the most important source of carbohydrates after maize and rice, and plays a principal role in the food economy (Udensi E Udensi et al. 2011). Given its importance, major efforts aim to improve cassava through global, regional and national crop improvement programs, leading to new cassava varieties released for adoption (Tahirou Abdoulaye et al. 2014)."
+	
+	The analysis here draws from a subset of data compiled through the Cassava Monitoring Survey in Nigeria conducted, reviewed for ethics regarding human subject participation (IRB) and published by the International Institute of Tropical Agriculture (IITA) (Wossen et al., 2017). The 16 states that contributed at least 80\% of the total production of cassava comprise the enumeration areas (EA) across four regions (Southwest, Southeast, South-South, and North) were obtained from the National Population Commission of Nigeria. Sample frames of all cassava growing households were developed through agricultural development programs in the targeted states, from which at least 50 cassava growing households were drawn per state for sample size of 125 EAs. In each EA, five household heads and two spouses were interviewed for a total of 625 households in each region. In sum, interviews were conducted with 2500 randomly selected cassava growing households in the major cassava growing states in the four geopolitical regions of Nigeria that together account for over 80% of the annual total cassava production. 
+	From this total survey, interviews were conducted with both the identified head of household and an additional member of the household to create a subset of 758 households. From this subset, only those households where both respondents met the following criteria are included in this analysis: the recorded relationship to the household head was self or spouse; status was married; and, both members reported living with spouse. This eliminated 29 households for a sample of 729 households ($1,458$ men and women). Also note that we use the terms husband and wife intentionally, and refrain from using the terms household head and spouse. In this analysis, 13 household heads are women, and 3 spouses are men. Among these responses, the wife of one household responded as the household head and the husband responded as the spouse. For the others, both respondents in 12 households reported being the household head, and both participants from two households reported being the spouse. Table 2 below details the descriptive statistics of the spousal subset analyzed here, including age, education, number of household members, and region. 
+	
+			\fontsize{9}{11}\selectfont
+	\renewcommand{\arraystretch}{0.8}
+	\begin{longtblr}[theme=table_JY,
+		caption = {Sampling and sex-disaggregation of previous studies of improved cassava-related technology adoption in Nigeria (non-systematic review)}, 
+		label = {table:lit}] {colspec ={ X[1,l] X[1,l] X[1,1] X[1,1] X[2,1]},rowhead=3}
+		\hline
+Category                       & Variable                      & Husbands &         & Wives &         \\
+&                               & n        & \%      & n     & \%      \\ \hline
+Marital Status                 & Married, living with spouse/s & 729      & 100\%   & 729   & 100\%   \\
+Relationship to Household Head & Self                          & 726      & 99.59\% & 13    & 1.80\%  \\
+& Spouse                        & 3        & 0.41\%  & 716   & 98.20\% \\
+Main Occupation                & Farmer (crop \&   livestock)  & 588      & 80.70\% & 490   & 67.20\% \\
+& Self-employed off farm        & 81       & 11.10\% & 160   & 21.90\% \\
+& Other                         & 60       & 8.20\%  & 79    & 10.90\% \\
+Region                         & 1                             & 186      & 25.50\% & 186   & 25.50\% \\
+& 2                             & 238      & 32.60\% & 238   & 32.60\% \\
+& 3                             & 165      & 22.60\% & 165   & 22.60\% \\
+& 4                             & 140      & 19.20\% & 140   & 19.20\%                                                                                                             
+		\\ \hline
+		
+	\end{longtblr}
+
+	\section{Methodology} \label{sec:methodology}
+\textbf{	"Much less is known about the case in which the regressor and the measurement error are both endogenous."} \cite{nguimkeu2019estimation}
+	
+	Measurement error in a regression analysis refers to the extent to which the measured values of the independent or dependent variables are different from their true values. Non-classical measurement errors occur when the measurement error is not independent of the true value of the variable, or when the measurement error is correlated with the error term in the regression model. This can happen, for example, if the measurement device used is biased, or if there are errors in the data collection process.
+	
+	Non-classical measurement error can result in biased estimates of the regression coefficients, and can also lead to problems with hypothesis testing. Specifically, non-classical measurement error can lead to attenuation bias, which occurs when the true value of the coefficient is underestimated. This happens because the measurement error causes the observed values of the independent variable to be less correlated with the dependent variable than they actually are. As a result, the regression coefficient is underestimated and the standard errors are inflated, leading to decreased statistical power and potentially false conclusions.
+	
+	Another problem with non-classical measurement error is that it can lead to omitted variable bias. This occurs when there is a variable that is both correlated with the independent variable and the dependent variable, but is not included in the regression model.
+	
+	
+	The paired t-tests look at wheter the difference between wife and husband is zero. \\
+	McNemar's test to see the effect of some treatment, training, or advertisement which brings about the changes in the attitude of individuals. It is similar to the paired samples t-test but for dichotomous nominal instead of interval variables.\\
+	
+	Recent method to compare two binary diagnostic tests subject to a paired design: Compbdt
+	\subsection{Probit model with endogenous misreporting}
+\begin{equation} \label{eq1}
+	y_i=\alpha_0 + x_i^{'} \beta +\epsilon_i
+\end{equation}
+where $y_i$ is the observed binary dependent variable. 
+
+\begin{equation}
+	Pr(y_i=1|x_i) = \Psi(\alpha_0 + x_i^{'} \beta +\epsilon_i)
+\end{equation}
+likelihood for independent $y_i|x_i$:
+\begin{equation}
+	L(\beta_i)=\prod_{n=1}^{n}\Psi((\alpha_0 + x_i^{'} \beta +\epsilon_i)^{y_i}(1-\Psi((\alpha_0 + x_i^{'} \beta +\epsilon_i))^{(1-y_i)}
+\end{equation}
+
+% STATA: https://www.stata.com/merror/
+
+%	\[y_i=\alpha0 + x_i^{'} \beta +\epsilon_i \]
+%	check the JOE paper 
+Proposition 1. if $cov(gender, x_i) \neq 0 $
+
+Proposition 2. if $cov(gender, y_i) \neq 0 $. We could not test this one using this dataset. 
+
+\subsection{Does double-hurdle solve the problem?}
+
+\subsection{Test the relationship between gender and key variables}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/asset_total}
+	\caption{asset total}
+	\label{fig:assettotal}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/ICV_MAle}
+	\caption{}
+	\label{fig:icvmale}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/regression2}
+	\caption{}
+	\label{fig:regression2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/regression}
+	\caption{}
+	\label{fig:regression}
+\end{figure}
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{../../../../JY_Note/JY_IO/Images/SAM1}
+	\caption[ICV_Managed_Male]{}
+	\label{fig:sam1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{../../../../JY_Note/JY_IO/Images/ICV_Managed_Male_cdf}
+	\caption[ICV_Managed_Male_cdf]{}
+	\label{fig:icvmanagedmalecdf}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{../../../../JY_Note/JY_IO/Images/ICV_Managed_Female}
+	\caption[ICV_Managed_Female]{}
+	\label{fig:icvmanagedfemale}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{../../../../JY_Note/JY_IO/Images/age}
+	\caption[age]{}
+	\label{fig:age}
+\end{figure}
+
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/ICV_HH_yn}
+	\caption[ICV_HH_yn]{}
+	\label{fig:icvhhyn}
+\end{figure}
+
+The McNemar's test is a statistical test used to compare the proportions of two related samples. It is often used in studies where two different treatments are applied to the same subjects, or when the same subjects are measured under two different conditions. We fail to reject the null hypothesis that the proportions of successes and failures are the same between the two samples.
+
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/2}
+	\caption[2]{}
+	\label{fig:2}
+\end{figure}
+
+\begin{table}[H]
+	\begin{tabular}{lllllllll}
+		& estimate & statistic & p.value  & parameter & conf.low & conf.high & method        & alternative \\
+		M\_HHAsset\_Value\_Female       & 4349043  & 1.06      & 0.291    & 728       & -3731753 & 12429838  & Paired-t-test & two.sided   \\
+		M\_HHAsset\_Value\_Male         & 1.03E+08 & 3.94      & 8.96E-05 & 728       & 51765553 & 1.55E+08  & Paired-t-test & two.sided   \\
+		M\_HHAsset\_Production\_Value   & 1.09E+08 & 3.89      & 0.00011  & 728       & 53871711 & 1.64E+08  & Paired-t-test & two.sided   \\
+		M\_Total\_Processing\_Asset\_HH & ?        &           &          &           &          &           &               &            
+	\end{tabular}
+\end{table}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/M_HHAsset_Value_Male}
+	\caption[M_HHAsset_Value_Male vs F_HHAsset_Value_Male]{}
+	\label{fig:mhhassetvaluemale}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/M_HHAsset_Value_Female}
+	\caption[M_HHAsset_Value_Female]{}
+	\label{fig:mhhassetvaluefemale}
+\end{figure}
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{"Images/paired t-test"}
+		\caption[paired t-tests]{}
+		\label{fig:paired-t-test}
+	\end{figure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.7\linewidth]{Images/M_HHAsset_Production_Value}
+		\caption[M_HHAsset_Production_Value]{}
+		\label{fig:mhhassetproductionvalue}
+	\end{figure}
+	
+\begin{table}[H]
+	\begin{tabular}{lllllllll}
+		& estimate & statistic & p.value  & parameter & conf.low & conf.high & method        & alternative \\
+		1 & 4349043  & 1.06      & 0.291    & 728       & -3731753 & 12429838  & Paired-t-test & two.sided   \\
+		2 & 1.03E+08 & 3.94      & 8.96E-05 & 728       & 51765553 & 1.55E+08  & Paired-t-test & two.sided   \\
+		3 & 1.09E+08 & 3.89      & 0.00011  & 728       & 53871711 & 1.64E+08  & Paired-t-test & two.sided  
+	\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/1}
+	\caption{}
+	\label{fig:1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/PDF_yn}
+	\caption{}
+	\label{fig:pdfyn}
+\end{figure}
+
+\begin{table}
+\caption{}
+\begin{tabular}{llllllll}
+	\hline
+	Estimate & Statistic & P.Value & Parameter & Conf.Low & Conf.High & Method & Alternative \\
+	\hline
+	0.0781893 & 4.170489753 & 3.41E-05 & 728 & 0.041382252 & 0.114996349 & Paired t-test & two.sided \\
+	\hline
+\end{tabular}
+\end{table}
+The p-value of the test is $3.41E-05$, which is less than the significance level alpha = 0.05. We can then reject null hypothesis and conclude that the responses from two genders are significantly different  with a p-value = $3.41E-05$.
+\cite{cohen1998statistical}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/reg_yn}
+	\caption{}
+	\label{fig:regyn}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}[t]{lcc}
+		\toprule
+		& Male & Female\\
+		\midrule
+		F\_ICV\_HH\_yn & 0.974*** & \\
+		& (0.074) & \\
+		M\_ICV\_HH\_yn &  & 0.619***\\
+		&  & (0.062)\\
+		\midrule
+		Num.Obs. & 729 & 729\\
+		AIC & 813.5 & 908.8\\
+		BIC & 818.1 & 913.4\\
+		Log.Lik. & -405.737 & -453.416\\
+		RMSE & 0.43 & 0.46\\
+		\bottomrule
+		\multicolumn{3}{l}{\rule{0pt}{1em}+ p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001}\\
+	\end{tabular}
+\end{table}
+\begin{tabular}{llll}
+	\hline
+	Frequency & Percent & Cum. & percent \\
+	\hline
+	538 & 73.8 & 73.8 &  \\
+	\hline
+	124 & 17 & 90.8 &  \\
+	\hline
+	67 & 9.2 & 100 &  \\
+	\hline
+	Total & 729 & 100 & 100 \\
+	\hline
+\end{tabular}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/diff_yn}
+	\caption{Diff_yn}
+	\label{fig:diffyn}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/diff_yn2}
+	\caption{Diff yn}
+	\label{fig:diffyn2}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\linewidth]{Images/zone}
+	\caption{Zone}
+	\label{fig:zone}
+\end{figure}
+
+\begin{table}[hH]
+	\centering
+	\begin{tabular}[t]{lc}
+		\toprule
+		& Diff\_Icv\\
+		\midrule
+		age\_diff & 0.060***\\
+		& (0.012)\\
+		edu\_diff & 0.042+\\
+		& (0.023)\\
+		ICV\_TotValue\_avg\_k & 0.000\\
+		& (0.000)\\
+		Zone1 & 1.034***\\
+		& (0.234)\\
+		Zone2 & 2.134***\\
+		& (0.259)\\
+		Zone3 & 2.227***\\
+		& (0.382)\\
+		\midrule
+		Num.Obs. & 729\\
+		AIC & \\
+		BIC & \\
+		Log.Lik. & \\
+		RMSE & 0.31\\
+		\bottomrule
+		\multicolumn{2}{l}{\rule{0pt}{1em}+ p $<$ 0.1, * p $<$ 0.05, ** p $<$ 0.01, *** p $<$ 0.001}\\
+	\end{tabular}
+\end{table}
+
+
+\section{Monte Carlo simulations to illustrate the problems}
+reference: \citet{chen2011nonlinear}
+
+	\section{Discussions} \label{sec:discussion}
+%	recommended practices
+		regression calibration, such as %		https://www.taylorfrancis.com/pdfviewer/
+		survey x\% of households with both genders to capture the differences to correct the mis-reporting error. 
+	\section{Conclusion} \label{sec:conclusion}
+	The inconsistent gender gap of technology adoption in previous studies may due to the non-classic measurement errors. Considering the importance of gender in agricultural production and technology adoption (e.g. FAO book), it is important to address the mis-reporting problem. We also propose the calibration method to address the problem. 
+	
+	
+	\singlespacing
+%	\setlength\bibsep{0pt}
+
+	
+	\bibliographystyle{plainnatJY}
+	\bibliography{References}
+ 
+	
+	\clearpage
+	
+	\onehalfspacing
+	
+%	\section*{Tables} \label{sec:tab}
+	\addcontentsline{toc}{section}{Tables}
+	
+	
+	
+	\clearpage
+	
+%	\section*{Figures} \label{sec:fig}
+	\addcontentsline{toc}{section}{Figures}
+	
+	%\begin{figure}[hp]
+	%  \centering
+	%  \includegraphics[width=.6\textwidth]{../fig/placeholder.pdf}
+	%  \caption{Placeholder}
+	%  \label{fig:placeholder}
+	%\end{figure}
+	
+	
+	\newpage
+
+
+	\citet{awotide2014assessing}
+	\citet{apu2011effect} 
+	\citet{nwakor2011socio}
+	\citet{wossen2017cassava}
+	
+	\clearpage
+	
+	\section*{Appendix A. Placeholder} \label{sec:appendixa}
+	\addcontentsline{toc}{section}{Appendix A}
+	\section*{Questions}
+	1. what is m\_household\_assets and f\_household\_assets?
+	2. Have  M\_Total\_Processing\_Asset\_HH, but not corresponding female varaible
+	
+	\begin{table}[H]
+		\begin{tabular}{lll} \hline
+			& m\_household\_assets & f\_household\_assets \\ \hline
+			count & 729                  & 729                  \\
+			mean  & 17                   & 17                   \\
+			std   & 0                    & 0                    \\
+			min   & 17                   & 17                   \\
+			25\%  & 17                   & 17                   \\
+			50\%  & 17                   & 17                   \\
+			75\%  & 17                   & 17                   \\
+			max   & 17                   & 17                  \\ \hline
+		\end{tabular}
+	\end{table}
+
+\begin{table}[]
+	\begin{tabular}{lllllllll} \hline
+		& estimate & statistic & p.value  & parameter & conf.low & conf.high & method        & alternative \\
+		M\_HHAsset\_Value\_Female       & 4349043  & 1.06      & 0.291    & 728       & -3731753 & 12429838  & Paired-t-test & two.sided   \\
+		M\_HHAsset\_Value\_Male         & 1.03E+08 & 3.94      & 8.96E-05 & 728       & 51765553 & 1.55E+08  & Paired-t-test & two.sided   \\
+		M\_HHAsset\_Production\_Value   & 1.09E+08 & 3.89      & 0.00011  & 728       & 53871711 & 1.64E+08  & Paired-t-test & two.sided   \\
+		M\_Total\_Processing\_Asset\_HH & ?        &           &          &           &          &           &               &    \\
+		m\_household\_assets & ?        &           &          &           &          &           &               &\\        
+	\end{tabular}
+\end{table}
+
+%	\section{Questions}
+%	In the word draft, it said there were no difference of ICV. Does that mean we know the true information of ICV?
+	
+	
+\end{document}

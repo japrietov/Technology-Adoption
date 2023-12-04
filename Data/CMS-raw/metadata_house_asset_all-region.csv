@@ -1,0 +1,16 @@
+Tab,Column,description_abstract,title,number of columns,data_type,creator,source,source date,source file,identifier,subject,subject.agrovoc,format,language,relation,coverage,coverage.country,rights
+Association_all_region,,,,14,,,IITA_CMS_Data_Dimu,12/06/2018,,,cassava,,xlsx,en,,,Nigeria,CC-BY 4.0
+,ZoneID,Zone ID,ZoneID,,numeric,,,,,,,,,,,,,
+,StateID,StateID,StateID,,numeric,,,,,,,,,,,,,
+,LgaID,,LgaID,,numeric,,,,,,,,,,,,,
+,LocalityID,Locality  ID,LocalityID,,numeric,,,,,,,,,,,,,
+,EnumerationID,Enumeration ID,EnumerationID,,numeric,,,,,,,,,,,,,
+,HouseID,Household ID,HouseID,,numeric,,,,,,,,,,,,,
+,Household_assets,Household_assets,Household asset,,text,,,,,,,,,,,,,
+,G05a_hhd_asset_own,G05a_Do you have this asset?,asset own,,boolean,,,,,,,,,,,,,
+,G05b_TNumber,G05b_Number of asset, UnitValue Naira ,,numeric,,,,,,,,,,,,,
+,G06_UnitValue_Naira,"describes the estimated unit value in Naira if sold, if more than one item reported G05b,",Total Number,,numeric,,,,,,,,,,,,,
+,G07_women_portion,"G07_Of the number in G05b, how many are owned by women?",Women portion,,numeric,,,,,,,,,,,,,
+,G08_men_protion,"G08_Of the number in G05b, how many are owned by men?",Men portion,,numeric,,,,,,,,,,,,,
+,,,portions_error_detection,,text,,,,,,,,,,,,,
+,,,error detection remark ,,text,,,,,,,,,,,,,

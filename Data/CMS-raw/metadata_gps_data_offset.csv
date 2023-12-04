@@ -1,0 +1,18 @@
+Tab,Column,description_abstract,title,number of columns,data_type,creator,source,source date,source file,identifier,subject,subject.agrovoc,format,language,relation,coverage,coverage.country,rights
+GPS_data_offset,,,,16,,,IITA_CMS_Data_Dimu,12/06/2018,,,cassava,,xlsx,en,,,Nigeria,CC-BY 4.0
+,ZoneID,Zone ID,,,numeric,,,,,,,,,,,,,
+,StateID,StateID,,,numeric,,,,,,,,,,,,,
+,LgaID,,,,numeric,,,,,,,,,,,,,
+,LocalityID,Locality  ID,,,numeric,,,,,,,,,,,,,
+,EnumerationID,Enumeration ID,,,numeric,,,,,,,,,,,,,
+,HouseID,Household ID,,,numeric,,,,,,,,,,,,,
+,Long,describes the geographic coordinate that specifies the east-west position of location on the Earth's surface,,,numeric,,,,,,,,,,,,,
+,Lat,describes the geographic coordinate that specifies the North-South position of location on the Earth's surface,,,numeric,,,,,,,,,,,,,
+,Altitude,describes the height or elevation above sea level of a location,,,numeric,,,,,,,,,,,,,
+,GPS_UnitID,J13_GPS unit ID,,,numeric,,,,,,,,,,,,,
+,Start_date,Survey start date,,,date,,,,,,,,,,,,,
+,Start_time,Survey start time,,,time,,,,,,,,,,,,,
+,End_date,Survey end date,,,date,,,,,,,,,,,,,
+,Endtime,Survey end time,,,time,,,,,,,,,,,,,
+,Date_checked,Date checked,,,date,,,,,,,,,,,,,
+,Time_checked,TIme checked,,,time,,,,,,,,,,,,,
