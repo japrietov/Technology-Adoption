@@ -2,11 +2,13 @@
 # coding: utf-8
 
 # In[1]:
-py37lib = r"C:\Users\jingy\AppData\Local\Programs\Python\Python37\Scripts"
+# py37lib = r"C:\Users\jingy\AppData\Local\Programs\Python\Python37\Scripts"
 import sys
 sys.path.append(py37lib)
 major, minor, micro = sys.version_info[:3]
 print(f"Your Python version is {major}.{minor}.{micro}")
+from matplotlib.ticker import FuncFormatter
+import sympy
 
 import pandas as pd
 import numpy as np
@@ -19,6 +21,8 @@ from statsmodels.iolib.summary2 import summary_col
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.colors import to_rgba
+import matplotlib
+matplotlib.use('TkAgg')
 
 import numpy as np
 from scipy.stats import t
@@ -27,6 +31,7 @@ from scipy.stats import ttest_rel
 from numpy.linalg import inv
 import warnings
 import roman
+import random
 
 
 sns.set_style('whitegrid')
@@ -43,8 +48,6 @@ rpy2_logger.setLevel(logging.ERROR)
 utils = importr('utils')
 base = importr('base')
 oaxaca = importr('oaxaca')
-
-
 
 WorkDir = r"D:\Dropbox\BoxOld\FEDSshare\MasterGithub\CornellGitHub\DataSynthesisForCropVariety\Code\DataSynthesis\MeasureError\Gender\MeasureError\AJAE_2023\Technology-Adoption"
 DataDir = WorkDir + '/Data'
@@ -113,10 +116,10 @@ def update_results(resulst_dict_threefold, ind, char, variables_dict, base=[], p
     df_overall.loc[len(df_overall.index)] = ['','','']
     df_overall.index = ['Agregate decomposition', '', 'Share of the gap', 'Detailed decomposition']
     
-    df_variables = pd.DataFrame(np.array(resulst_dict_threefold['variables']), 
+    df_variables = pd.DataFrame(np.array(resulst_dict_threefold['variables']),
                         index=['constant'] + ind + char + base,
                         columns = columns_names)
-    df_variables = df_variables.rename(index=variables_dict)
+    df_variables = df_variables.rename(index=variables_dictDeco)
 
     df_variables['endowments'] = df_variables[['coef(endowments)', 'se(endowments)']].apply(update_tab, axis=1)
     df_variables['coefficients'] = df_variables[['coef(coefficients)', 'se(coefficients)']].apply(update_tab, axis=1)
@@ -140,7 +143,6 @@ def update_results(resulst_dict_threefold, ind, char, variables_dict, base=[], p
 # # Read and clean the data
 
 # In[214]:
-
 
 def fix_main_ocupation(x):
     if x not in ['Farming(crop+livestock)', 'Self employed off farm', 'Salaried employment']:
@@ -221,7 +223,7 @@ for exp in experiment:
     })
 
     df_test['A02_Sex'] = df_test['A02_Sex'].astype('category').cat.codes
-    df_test.to_csv(f OutputDir + '/df_{exp}.csv', index=False)
+    df_test.to_csv(OutputDir + f'/df_{exp}.csv', index=False)
 
 
 variables_dict = {'planted': 'Y/N ICV', 'Household_ICV': 'Total ICV', 
@@ -256,90 +258,145 @@ variables_dict = {'planted': 'Y/N ICV', 'Household_ICV': 'Total ICV',
 # input: Dataset and percentage of female answers
 # output: pseudo-dataset with the ICV_HH_yn values and Adop_rate.
 #########################################################################
-def sudo_share(df_M, df_F, rate, variable):
+def sudo_share(df_M, df_F, rate,variable):
     # print(df.shape)
+
     num_fe = int(df_F.shape[0]*rate)
     num_ma = int(df_M.shape[0]*(1-rate))
     df_sample_fe =  df_F.sample(num_fe)
     df_sample_ma = df_M.sample(num_ma)
-    
-    df_sample_i = np.concatenate((df_sample_fe[variable].values, df_sample_ma[variable].values))
-    df_sample_i = pd.DataFrame(df_sample_i, columns=[variable])
-    Adop_rate = df_sample_i.sum() / df_M.shape[0]
-    return [df_sample_i, Adop_rate]
+    df_sample_fe = df_sample_fe[[variable, 'ZoneID']]
+    df_sample_ma = df_sample_ma[[variable, 'ZoneID']]
+    df_sample_i = pd.concat([df_sample_fe, df_sample_ma])
+    df_sample_i['F_Rate'] = rate
+    # df_sample_i = np.concatenate((df_sample_fe[variable, 'ZoneID'].values, df_sample_ma[variable,'ZoneID'].values))
+    # df_sample_i = pd.DataFrame(df_sample_i, columns=[variable])
+    # Adop_rate = df_sample_i.sum() / df_sample_i.shape[0]
+    # Adop_rate_Zone = df_sample_i.groupby('ZoneID').sum() / df_sample_i.groupby('ZoneID').count()
+    # Adop_rate_Zone.reset_index(inplace=True)
+    # return [df_sample_i, Adop_rate,Adop_rate_Zone]
+    return df_sample_i
 
 # Weighted selection: p_i is the probability of selecting element i
 def weighted(p):
-    y = rand.random()
+    y = random.random()
     k=0
     while k<len(p) and y>=p[k]:
         y -= p[k]
         k+=1
     return k
 
-df_FM_test = pd.read_csv("../Output/df_FM.csv")
-
+df_FM_test = pd.read_csv(OutputDir + "/df_FM.csv")
+# df_FM_test.to_csv(OutputDir +'/df_FM_test.csv',sep='|',index=False)
 p = (df_FM_test['ZoneID'].value_counts()/df_FM_test['ZoneID'].value_counts().sum()).sort_index().values
 
+dependent_self_reported = ['planted', 'Household_ICV']
+dependent_DNA = ['DNA_planted', 'DNA_Household_ICV']
 
 df_F_test = df_FM_test[df_FM_test['A02_Sex'] == 0].rename(columns=variables_dict)
 df_M_test = df_FM_test[df_FM_test['A02_Sex'] == 1].rename(columns=variables_dict)
 dep_self =  list(map(lambda x: variables_dict[x], dependent_self_reported))
 
 experiment = {y:[] for y in dep_self}
+y = 'Y/N ICV'
+# for y in dep_self:
 
-for y in dep_self:
-    df_mc_results = []
-    df_mc_results_cluster = []
+df_sudo = pd.DataFrame()
+for i in range(5):
+    # print(i)
+    df_adop_rate = []
+    adopt_rate_zone = []
 
-    for i in range(1000):
-        df_sudo = []
-        df_adop_rate = []
+    df_sudo_cluster = []
+    df_adop_rate_cluster = []
+    for percentage in np.arange(0, 1.1, 0.1):
+        # print(percentage)
+        # df_sample, adop_rate, adopt_rate_zone = sudo_share(df_M_test, df_F_test, round(percentage, 1), y)
+        df_sample  = sudo_share(df_M_test, df_F_test, round(percentage, 1), y)
+        df_sample['Iteration'] = int(i)
+        df_sudo = df_sudo.append(df_sample)
+df_sudo.to_csv(OutputDir +'/sudoRate_5.csv',sep='|',index=False)
 
-        df_sudo_cluster = []
-        df_adop_rate_cluster = []
-        for percentage in np.arange(0, 1.1, 0.1):
-            df_sample, adop_rate = sudo_share(df_M_test, df_F_test, round(percentage, 1), y)
-            df_sudo.append(df_sample)
-            df_adop_rate.append(adop_rate)
+df_sudo =pd.read_csv(OutputDir +'/sudoRate_500Ite.csv',sep='|')
+df_sudo =pd.read_csv(OutputDir +'/sudoRate_5.csv',sep='|')
 
-            selected_cluster = weighted(p) + 1
-            df_M_cluster = df_M_test[df_M_test['ZoneID'] == selected_cluster]
-            df_F_cluster = df_F_test[df_F_test['ZoneID'] == selected_cluster]
-            df_sample, adop_rate = sudo_share(df_M_cluster, df_F_cluster, round(percentage, 1), y)
-            df_sudo_cluster.append(df_sample)
-            df_adop_rate_cluster.append(adop_rate)
+Adop_rate = df_sudo.groupby(['F_Rate','Iteration'])['Y/N ICV'].sum() / df_sudo.groupby(['F_Rate','Iteration'])['Y/N ICV'].count()
+Adop_rate = pd.DataFrame({'Adop_rate': Adop_rate})
+Adop_rate.reset_index(inplace=True)
+
+Adop_rate_Zone = df_sudo.groupby(['ZoneID','F_Rate','Iteration'])['Y/N ICV'].sum() / df_sudo.groupby(['ZoneID','F_Rate','Iteration'])['Y/N ICV'].count()
+Adop_rate_Zone = pd.DataFrame({'adop_rate_zone': Adop_rate_Zone})
+Adop_rate_Zone.reset_index(inplace=True)
+
+def percentage_formatter(x, pos):
+    return f'{x * 100:.0f}%'
+
+fig1, ax1 = plt.subplots(dpi=100)
+sns.lineplot(ax=ax1, data=Adop_rate,x='F_Rate',y='Adop_rate',  markers=True,errorbar=("se", 2) )
+ax1.yaxis.set_major_formatter(FuncFormatter(percentage_formatter))
+ax1.set_title(y, fontweight='bold')
+ax1.set_xlabel('Percentage of Female', fontweight='bold')
+ax1.set_ylabel('Adoption rate' , fontweight='bold')
+# plt.savefig(OutputDir+'/Figure/AdopRate_500.png',dpi = 2000)
+plt.savefig(OutputDir+'/Figure/AdopRate_5.png',dpi = 2000)
+plt.show()
+
+fig1, ax1 = plt.subplots(dpi=100)
+sns.lineplot(
+    ax=ax1,    data=Adop_rate_Zone,    x='F_Rate',    y='adop_rate_zone',
+    markers=True,    err_style='band',    hue='ZoneID',    style='ZoneID'
+)
+ax1.yaxis.set_major_formatter(FuncFormatter(percentage_formatter))
+ax1.set_title(y, fontweight='bold')
+ax1.set_xlabel('Percentage of Female', fontweight='bold')
+ax1.set_ylabel('Adoption rate', fontweight='bold')
+ax1.legend(loc='upper right', title='Zone',bbox_to_anchor=(0.95,0.5))
+# plt.savefig(OutputDir + '/Figure/AdopRateZone_500.png', dpi=2000)
+plt.savefig(OutputDir + '/Figure/AdopRateZone_5.png', dpi=2000)
+plt.show()
+
+        #
+        # selected_cluster = weighted(p) + 1
+        # df_M_cluster = df_M_test[df_M_test['ZoneID'] == selected_cluster]
+        # df_F_cluster = df_F_test[df_F_test['ZoneID'] == selected_cluster]
+        # df_sample, adop_rate = sudo_share(df_M_cluster, df_F_cluster, round(percentage, 1), y)
+        # df_sudo_cluster.append(df_sample)
+        # df_adop_rate_cluster.append(adop_rate)
 
         df_sudo = pd.concat(df_sudo, axis=1, keys = ['0','10','20','30','40','50','60','70','80','90','100'])
         df_adop_rate = pd.concat(df_adop_rate, axis=1, keys=['0','10','20','30','40','50','60','70','80','90','100'])
         df_mc_results.append(df_adop_rate)
+        df_zone_results.append(adopt_rate_zone)
 
-        df_sudo_cluster = pd.concat(df_sudo_cluster, axis=1, keys = ['0','10','20','30','40','50','60','70','80','90','100'])
-        df_adop_rate_cluster = pd.concat(df_adop_rate_cluster, axis=1, keys=['0','10','20','30','40','50','60','70','80','90','100'])
-        df_mc_results_cluster.append(df_adop_rate_cluster)
+        # df_sudo_cluster = pd.concat(df_sudo_cluster, axis=1, keys = ['0','10','20','30','40','50','60','70','80','90','100'])
+        # df_adop_rate_cluster = pd.concat(df_adop_rate_cluster, axis=1, keys=['0','10','20','30','40','50','60','70','80','90','100'])
+        # df_mc_results_cluster.append(df_adop_rate_cluster)
 
     df_mc_results = pd.concat(df_mc_results)
     df_mc_results = df_mc_results.reset_index(drop=True)
 
-    df_mc_results_cluster = pd.concat(df_mc_results_cluster)
-    df_mc_results_cluster = df_mc_results_cluster.reset_index(drop=True)
+    df_zone_results = pd.concat(df_zone_results)
+    df_zone_results = df_zone_results.reset_index(drop=True)
     
     df_mc = df_mc_results.melt()
     df_mc['bootstrap'] = 'Bootstrap #1'
 
-    df_mc_cluster = df_mc_results_cluster.melt()
-    df_mc_cluster['bootstrap'] = 'Bootstrap #2'
+    df_zone_results = df_zone_results.melt()
+    df_zone_results['bootstrap'] = 'Bootstrap #2'
     
         
-    df_mc_both = pd.concat([df_mc, df_mc_cluster])
+    df_mc_both = pd.concat([df_mc, df_zone_results])
     # df_mc_both.columns = ['Percentage of Female', 'Adoption rate', 'Bootstrap method']
     experiment[y] = df_mc_both
 
 
 # In[209]:
 
+# experiment_ori = experiment.copy()
+# experiment[y] = df_mc
 
 for y in experiment:
+
     fig1, ax1 = plt.subplots(dpi=100)
     sns.lineplot(ax=ax1, data=experiment[y], x="variable", y="value", 
                  hue="bootstrap", style="bootstrap",
@@ -392,20 +449,53 @@ independent = independent_income + independent_coop_member + independent_credit 
 # In[126]:
 
 
-df_FM_test = pd.read_csv("../Output/df_FM.csv")
+df_FM_test = pd.read_csv(OutputDir + "/df_FM.csv")
 
 df_F_test = df_FM_test[df_FM_test['A02_Sex'] == 0].rename(columns=variables_dict)
 df_M_test = df_FM_test[df_FM_test['A02_Sex'] == 1].rename(columns=variables_dict)
 
+# J02_ percentage of household income comes from cassava? (%)
+independent_income = ['J02_per_hh_inc_cassav']
+
+# household member in coop group (0, 1)
+independent_coop_member = ['Joint_Coop']
+
+# general household credit access (0, 1)
+independent_credit =  ['Credit_Access'] # Also check ['Joint_Credit']
+
+# total household value of household assets
+independent_household_asset = ['log_Total_Household_Asset_Value']
+
+# total production asset value owned by house
+independent_production_asset = ['log_Total_Production_Asset_Value']
+
+independent = independent_income + independent_coop_member + independent_credit  + independent_household_asset + independent_production_asset
+characteristic = ['ZoneID_1', 'ZoneID_3', 'ZoneID_4', # ZoneID_2 is base
+                  'A03_Age', 'A05_Edu', 'Household_Size',
+                  'A07_1_Main_occupatn_Farming', 'A07_1_Main_occupatn_Self_employed_off_farm',
+                  'A07_1_Main_occupatn_Other', # A07_1_Main_occupatn_Salaried_employment is base
+                  'A08_fam_lab_contributn']
+
+test = df_FM_test[['A07_1_Main_occupatn_Farming', 'A07_1_Main_occupatn_Self_employed_off_farm',
+                  'A07_1_Main_occupatn_Other', 'A07_1_Main_occupatn_Salaried_employment']]
+test.sum()
+test2 = df_F_test[ind]
 ind = list(map(lambda x: variables_dict[x], independent))
 char = list(map(lambda x: variables_dict[x], characteristic))
+dependent_self_reported = ['planted', 'Household_ICV']
+dependent_DNA = ['DNA_planted', 'DNA_Household_ICV']
 dep_self =  list(map(lambda x: variables_dict[x], dependent_self_reported))
 dep_dna = list(map(lambda x: variables_dict[x], dependent_DNA))
 zones = char[:3]
 
 
 results = []
+dep_self = ['Y/N ICV', 'Total ICV']
+dep_dna =  ['DNA Y/N ICV', 'DNA Total ICV']
 
+
+dep_self = ['Y/N ICV' ]
+dep_dna =  ['DNA Y/N ICV' ]
 for y_self, y_DNA in zip(dep_self, dep_dna):
     ##############################################
     # Self-reported regressions
@@ -461,9 +551,11 @@ summary_str  = summary_col(results,
                           )# .as_latex()
 
 df_results = summary_str.tables[0]
-# df_results.columns = ['DNA' if i%2==0 else 'Self-reported' for i in range(df_results.columns.shape[0])]
-# print(df_results.to_latex())
+df_results.columns = ['DNA' if i%2==0 else 'Self-reported' for i in range(df_results.columns.shape[0])]
+print(df_results.to_latex())
 df_results
+with open('mytable.tex', 'w') as tf:
+    tf.write(df_results.to_latex())
 
 
 # # 3. Oaxaca-blinder decomposition
@@ -541,7 +633,7 @@ for y in ['planted', 'Household_ICV']:
     df_tmp.columns = pd.MultiIndex.from_product([[y], df_tmp.columns])
     df_results.append(df_tmp)
     
-#print(pd.concat(df_results, axis=1).to_latex(escape=False))
+print(pd.concat(df_results, axis=1).to_latex(escape=False))
 pd.concat(df_results, axis=1)
 
 
