@@ -1,5 +1,6 @@
 # Data directory
-Data/
+Data/CMS-hh/drive-download-20231006T131216Z-001
+Data/CMS-hh/drive-download-20231006T131216Z-001.zip
 
 # Old code
 Code/OLD/
@@ -10,6 +11,8 @@ Code/.ipynb_checkpoints/
 
 # Manuscript directory
 Manuscript/
+
+Readings/
 
 # Old output
 Output/OLD
