@@ -1,9 +1,0 @@
-Tab,Column,description_abstract,title,number of columns,data_type,creator,source,source date,source file,identifier,subject,subject.agrovoc,format,language,relation,coverage,coverage.country,rights
-Cassava_DNA,,,,7,,,IITA_CMS_Data_Dimu,12/06/2018,,,cassava,,xlsx,en,,,Nigeria,CC-BY 4.0
-,StateID,StateID,,,numeric,,,,,,,,,,,,,
-,EnumerationID,Enumeration ID,,,numeric,,,,,,,,,,,,,
-,HouseID,Household ID,,,numeric,,,,,,,,,,,,,
-,CassavaPlotInformationID,Cassava Plot Information,,,numeric,,,,,,,,,,,,,
-,Fieldcode,FieldID_edited,,,numeric,,,,,,,,,,,,,
-,Plotcode,plotcode_Edited,,,numeric,,,,,,,,,,,,,
-,adoption,Adoption status using DNA-Fingerprinting,,,boolean,,,,,,,,,,,,,
