@@ -1,0 +1,15 @@
+# Data directory
+Data/
+
+# Old code
+Code/OLD/
+
+# Jupyter checkpoints
+Code/.ipynb_checkpoints/
+
+
+# Manuscript directory
+Manuscript/
+
+# Old output
+Output/OLD
